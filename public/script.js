@@ -1,44 +1,57 @@
 const socket = io("https://real-time-chatbox-f4k1.onrender.com");
 
-// Select elements
-const msgInput = document.getElementById("msgInput");
-const messagesDiv = document.getElementById("messages");
+let username = "";
 
-// Send message
+// Step 1: Set username
+function setUsername() {
+    const input = document.getElementById("usernameInput").value.trim();
+
+    if (input.length === 0) return;
+    username = input;
+
+    document.getElementById("username-screen").classList.add("hidden");
+    document.getElementById("chat-screen").classList.remove("hidden");
+
+    document.getElementById("welcome").textContent = "Welcome, " + username + "!";
+
+    socket.emit("userJoined", username);
+}
+
+// Step 2: Send message
 function sendMessage() {
-    const text = msgInput.value.trim();
-    if (text === "") return;
+    const msg = document.getElementById("msgInput").value.trim();
+    if (msg.length === 0) return;
 
-    // Show instantly on your screen
-    addMessage(text, true);
+    socket.emit("chatMessage", { username, msg });
+    addMessage(username, msg, true);
 
-    // Send to server
-    socket.emit("chatMessage", text);
-
-    msgInput.value = "";
+    document.getElementById("msgInput").value = "";
 }
 
-// Receive messages from server
-socket.on("chatMessage", (msg) => {
-    addMessage(msg, false);
+// Step 3: Receive messages
+socket.on("chatMessage", (data) => {
+    addMessage(data.username, data.msg, false);
 });
 
-// Function to add message to chat UI
-function addMessage(text, isSelf) {
-    const div = document.createElement("div");
-    div.classList.add("msg");
-    if (isSelf) div.classList.add("self");
+// Step 4: User joined
+socket.on("userJoined", (name) => {
+    const messages = document.getElementById("messages");
+    const notice = document.createElement("div");
+    notice.classList.add("join-notice");
+    notice.textContent = name + " joined the chat!";
+    messages.appendChild(notice);
+});
 
-    div.textContent = text;
-    messagesDiv.appendChild(div);
+// Step 5: Add message bubbles
+function addMessage(user, text, isSelf) {
+    const messages = document.getElementById("messages");
 
-    // Auto scroll to bottom
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    const bubble = document.createElement("div");
+    bubble.classList.add("msg");
+    if (isSelf) bubble.classList.add("self");
+
+    bubble.innerHTML = '<strong>${user}:</strong>${text}';
+    messages.appendChild(bubble);
+
+    messages.scrollTop = messages.scrollHeight;
 }
-
-// Send message on Enter key
-msgInput.addEventListener("keyup", (e) => {
-    if (e.key === "Enter") {
-        sendMessage();
-    }
-});

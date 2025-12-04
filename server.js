@@ -8,11 +8,14 @@ const io = require("socket.io")(http, {
 app.use(express.static("public"));
 
 io.on("connection", (socket) => {
-    console.log("User connected");
 
-    socket.on("chatMessage", (msg) => {
-        io.emit("chatMessage", msg);
+    socket.on("userJoined", (name) => {
+        io.emit("userJoined", name);
+    });
+
+    socket.on("chatMessage", (data) => {
+        io.emit("chatMessage", data);
     });
 });
 
-http.listen(3000, () => console.log("Server running on port 3000"));
+http.listen(3000, () => console.log("Server running"));

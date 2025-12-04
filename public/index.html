@@ -2,18 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Real-Time Chat</title>
+    <title>Realtime Chat</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Real-Time Chat App</h2>
 
-    <div id="messages"></div>
+    <!-- Username Screen -->
+    <div id="username-screen">
+        <h2>Enter Your Username</h2>
+        <input type="text" id="usernameInput" placeholder="Your name...">
+        <button onclick="setUsername()">Join Chat</button>
+    </div>
 
-    <input id="msgInput" type="text" placeholder="Type message..." autocomplete="off">
-    <button onclick="sendMessage()">Send</button>
+    <!-- Chat Screen -->
+    <div id="chat-screen" class="hidden">
+        <h2 id="welcome"></h2>
 
-    <!-- socket.io script from backend (temporary local) -->
+        <div id="messages"></div>
+
+        <div id="input-area">
+            <input id="msgInput" type="text" placeholder="Type message..." autocomplete="off">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Socket.io -->
     <script src="https://real-time-chatbox-f4k1.onrender.com/socket.io/socket.io.js"></script>
 
     <script src="script.js"></script>
