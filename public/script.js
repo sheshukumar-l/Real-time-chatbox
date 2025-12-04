@@ -50,7 +50,7 @@ function addMessage(user, text, isSelf) {
     bubble.classList.add("msg");
     if (isSelf) bubble.classList.add("self");
 
-    bubble.innerHTML = '<strong>${user}:</strong>${text}';
+    bubble.innerHTML = `<strong>${user}:</strong> ${text}`;
     messages.appendChild(bubble);
 
     messages.scrollTop = messages.scrollHeight;
