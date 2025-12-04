@@ -30,6 +30,7 @@ function sendMessage() {
 
 // Step 3: Receive messages
 socket.on("chatMessage", (data) => {
+    if (data.username === username) return; // Ignore our own broadcast
     addMessage(data.username, data.msg, false);
 });
 
